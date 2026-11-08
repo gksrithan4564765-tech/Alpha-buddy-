@@ -1,580 +1,458 @@
-<!DOCTYPE html>
 
-<html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Alpha Buddy</title>  <style>  
-*{box-sizing:border-box}  
-body{  
- margin:0;  
- font-family:Arial,sans-serif;  
- background:#f4f1ff;  
- color:#30245f;  
-}  
-header{  
- background:linear-gradient(120deg,#503bb5,#a18bff);  
- color:white;  
- text-align:center;  
- padding:22px;  
-}  
-header h1{font-size:32px;margin:5px}  
-nav{  
- display:flex;  
- flex-wrap:wrap;  
- justify-content:center;  
- gap:7px;  
- padding:12px;  
- background:white;  
- position:sticky;  
- top:0;  
- z-index:5;  
-}  
-nav button{  
- border:0;  
- border-radius:12px;  
- padding:11px;  
- background:#eeeaff;  
- color:#503bb5;  
- font-weight:bold;  
- cursor:pointer;  
-}  
-nav button:hover{background:#503bb5;color:white}  
-main{max-width:950px;margin:auto;padding:16px}  
-.page{display:none}  
-.page.active{display:block}  
-.card{  
- background:white;  
- padding:20px;  
- border-radius:18px;  
- margin:14px 0;  
- box-shadow:0 4px 15px #0000000b;  
-}  
-.hero{text-align:center;padding:35px 15px}  
-.mascot{font-size:85px}  
-h2{color:#634bd0}  
-.action{  
- border:0;  
- border-radius:12px;  
- padding:13px 18px;  
- background:#7059dc;  
- color:white;  
- font-weight:bold;  
- margin:5px;  
- cursor:pointer;  
-}  
-.action:hover{background:#4934ad}  
-.choice{  
- display:block;  
- width:100%;  
- text-align:left;  
- padding:14px;  
- border:2px solid transparent;  
- background:#eeeaff;  
- border-radius:12px;  
- margin:8px 0;  
- cursor:pointer;  
- font-size:16px;  
-}  
-.choice:hover{border-color:#7059dc}  
-input{  
- width:100%;  
- padding:13px;  
- border:2px solid #ddd5ff;  
- border-radius:12px;  
- font-size:16px;  
-}  
-.word{font-size:30px;font-weight:bold;color:#7059dc}  
-.progress{  
- background:#e6e0ff;  
- height:13px;  
- border-radius:20px;  
- overflow:hidden;  
-}  
-.progress div{  
- height:100%;  
- width:0;  
- background:#54c9a5;  
- transition:.3s;  
-}  
-.feedback{font-weight:bold;margin-top:12px}  
-.badges{display:flex;flex-wrap:wrap;gap:12px}  
-.badge{  
- background:#fff1bd;  
- border-radius:14px;  
- padding:15px;  
- text-align:center;  
-}  
-footer{  
- background:#30245f;  
- color:white;  
- text-align:center;  
- padding:20px;  
- margin-top:25px;  
-}  
-</style>  </head>  <body>  <header>  
- <h1>📘 ALPHA BUDDY</h1>  
- <p>Your Friendly English Learning Partner</p>  
- <h3>⭐ <span id="stars">0</span> Stars</h3>  
-</header>  <nav>  
- <button onclick="showPage('home')">🏠 Home</button>  
- <button onclick="showPage('journey')">🗺️ Journey</button>  
- <button onclick="showPage('listen')">🎧 Listen</button>  
- <button onclick="showPage('speak')">🎤 Speak</button>  
- <button onclick="showPage('quiz')">❓ Quiz</button>  
- <button onclick="showPage('stories')">📖 Stories</button>  
- <button onclick="showPage('words')">🧠 Word Bank</button>  
- <button onclick="showPage('rewards')">🏆 Rewards</button>  
-</nav>  <main>  <!-- HOME -->  <section id="home" class="page active">  
- <div class="card hero">  
-  <<img src="logo.png" style="width:170px; border-radius:20px;">  
-  <h2>Hello, Learner!</h2>  
-  <p>Welcome to Alpha Buddy!</p>  
-  <p>Learn English slowly, easily and happily with Buddy.</p>  
-  <button class="action" onclick="showPage('journey')">Start Learning 🚀</button>  
-  <button class="action" onclick="speak('Welcome to Alpha Buddy! Let us learn English together.')">🔊 Meet Buddy</button>  
- </div>   <div class="card">  
-  <h2>Your Progress</h2>  
-  <div class="progress"><div id="homeProgress"></div></div>  
-  <p id="progressText">0 of 10 lessons completed</p>  
- </div>   <div class="card">  
-  <h2>💡 Today's Tip</h2>  
-  <p>Practise English every day. Mistakes help you learn!</p>  
- </div>  
-</section>  <!-- JOURNEY -->  <section id="journey" class="page">  
- <h2>🗺️ Your Slow Learning Journey</h2>  
- <p>Complete each stage at your own speed.</p>  
- <div class="card">  
-  <div class="progress"><div id="journeyProgress"></div></div>  
-  <p id="journeyText"></p>  
- </div>  
- <div id="lessonList"></div>  
- <div id="lessonArea"></div>  
-</section>  <!-- LISTEN -->  <section id="listen" class="page">  
- <h2>🎧 Listen & Learn</h2>  
- <div class="card">  
-  <div class="word" id="listenWord">Good Morning!</div>  
-  <p id="listenMeaning">A friendly morning greeting.</p>  
-  <button class="action" onclick="listenNow()">🔊 Listen Slowly</button>  
-  <button class="action" onclick="nextListen()">Next ➡️</button>  
- </div>  
-</section>  <!-- SPEAK -->  <section id="speak" class="page">  
- <h2>🎤 Speak With Buddy</h2>  
- <div class="card">  
-  <div class="mascot">🦉</div>  
-  <h3 id="buddyQuestion">Hello! What is your name?</h3>  
-  <button class="action" onclick="speak(buddyQuestions[buddyIndex])">🔊 Hear Buddy</button>  
-  <input id="speechAnswer" placeholder="Type your answer...">  
-  <button class="action" onclick="startMic()">🎙️ Speak</button>  
-  <button class="action" onclick="sendAnswer()">Send Answer</button>  
-  <p id="speechFeedback" class="feedback"></p>  
- </div>  
- <div class="card">  
-  <p>Microphone recognition depends on browser support and permission. You can always type your answer instead.</p>  
- </div>  
-</section>  <!-- QUIZ -->  <section id="quiz" class="page">  
- <h2>❓ Fun Quiz Time</h2>  
- <div class="card">  
-  <p id="quizNumber"></p>  
-  <h3 id="question"></h3>  
-  <div id="options"></div>  
-  <p id="quizFeedback" class="feedback"></p>  
-  <button class="action" id="nextButton" onclick="nextQuestion()" disabled>Next Question ➡️</button>  
- </div>  
-</section>  <!-- STORIES -->  <section id="stories" class="page">  
- <h2>📖 Story Time</h2>  
- <div class="card">  
-  <h3>The Helpful Little Bird 🐦</h3>  
-  <p id="storyText">  
-   A little bird saw a thirsty plant.  
-   Every day, it brought drops of water.  
-   Soon, the plant grew beautiful flowers.  
-   The bird felt happy because it helped someone.  
-  </p>  
-  <button class="action" onclick="speak(document.getElementById('storyText').innerText)">🔊 Listen to Story</button>  
-  <button class="action" onclick="storyQuestion()">Story Question</button>  
-  <p id="storyFeedback"></p>  
- </div>  
-</section>  <!-- WORD BANK -->  <section id="words" class="page">  
- <h2>🧠 Word Bank</h2>  
- <input id="wordSearch" placeholder="Search for a word..." oninput="renderWords()">  
- <div id="wordList"></div>  
-</section>  <!-- REWARDS -->  <section id="rewards" class="page">  
- <h2>🏆 Rewards & Badges</h2>  
- <div class="card">  
-  <h2>⭐ Your Stars: <span id="rewardStars">0</span></h2>  
- </div>  
- <div class="card">  
-  <h2>Your Badges</h2>  
-  <div class="badges" id="badgeList"></div>  
- </div>  
-</section>  </main>  <footer>  
- <h3>💜 ALPHA BUDDY</h3>  
- <p>Learn English. Speak Confidently. Shine Brightly.</p>  
-</footer>  <script>  
-  
-// PROGRESS STORAGE  
-  
-let stars = Number(localStorage.getItem("abStars") || 0);  
-let completed = JSON.parse(localStorage.getItem("abLessons") || "[]");  
-let quizPlayed = localStorage.getItem("abQuiz") === "yes";  
-  
-function save(){  
- localStorage.setItem("abStars",stars);  
- localStorage.setItem("abLessons",JSON.stringify(completed));  
- localStorage.setItem("abQuiz",quizPlayed?"yes":"no");  
- update();  
-}  
-  
-function update(){  
- document.getElementById("stars").textContent=stars;  
- document.getElementById("rewardStars").textContent=stars;  
-  
- let p=completed.length*10;  
- document.getElementById("homeProgress").style.width=p+"%";  
- document.getElementById("journeyProgress").style.width=p+"%";  
- document.getElementById("progressText").textContent=  
- completed.length+" of 10 lessons completed";  
- document.getElementById("journeyText").textContent=p+"% completed";  
-  
- renderBadges();  
-}  
-  
-// NAVIGATION  
-  
-function showPage(id){  
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));  
- document.getElementById(id).classList.add("active");  
-  
- if(id==="journey")renderLessons();  
- if(id==="quiz")displayQuiz();  
- if(id==="words")renderWords();  
- if(id==="rewards")renderBadges();  
-  
- window.scrollTo(0,0);  
-}  
-  
-// VOICE GUIDE  
-  
-function speak(text,rate=.75){  
- if(!("speechSynthesis" in window)){  
-  alert("Voice is not supported in this browser.");  
-  return;  
- }  
- speechSynthesis.cancel();  
- let voice=new SpeechSynthesisUtterance(text);  
- voice.lang="en-US";  
- voice.rate=rate;  
- speechSynthesis.speak(voice);  
-}  
-  
-// LESSON DATA  
-  
-const lessons=[  
- ["Hello English!","Learn greetings and introductions."],  
- ["The Alphabet","Learn English letters."],  
- ["First Words","Learn everyday words."],  
- ["Naming Words","Understand nouns."],  
- ["Making Sentences","Build simple sentences."],  
- ["My Family","Learn family vocabulary."],  
- ["Action Words","Learn verbs."],  
- ["Asking Questions","Learn simple questions."],  
- ["Conversations","Practise daily conversations."],  
- ["First Story","Read and understand a story."]  
-];  
-  
-function renderLessons(){  
- let list=document.getElementById("lessonList");  
- list.innerHTML="";  
-  
- lessons.forEach((l,i)=>{  
-  let card=document.createElement("div");  
-  card.className="card";  
-  
-  let title=document.createElement("h3");  
-  title.textContent=(completed.includes(i)?"✅ ":"📘 ")+  
-  "Stage "+(i+1)+": "+l[0];  
-  
-  let description=document.createElement("p");  
-  description.textContent=l[1];  
-  
-  let button=document.createElement("button");  
-  button.className="action";  
-  button.textContent="Open Lesson";  
-  button.onclick=()=>openLesson(i);  
-  
-  card.append(title,description,button);  
-  list.appendChild(card);  
- });  
-}  
-  
-function openLesson(i){  
- let area=document.getElementById("lessonArea");  
-  
- area.innerHTML=`  
- <div class="card">  
- <h2>${lessons[i][0]}</h2>  
- <p>${lessons[i][1]}</p>  
- <p><b>Example:</b> Hello! My name is Alex.</p>  
- <button class="action" id="lessonListen">🔊 Listen</button>  
- <h3>Quick Practice</h3>  
- <p>Which is a friendly greeting?</p>  
- <button class="choice" id="wrong">Goodbye forever</button>  
- <button class="choice" id="right">Hello!</button>  
- <p id="lessonResult" class="feedback"></p>  
- </div>`;  
-  
- document.getElementById("lessonListen").onclick=()=>{  
-  speak("Hello! My name is Alex.");  
- };  
-  
- document.getElementById("wrong").onclick=()=>{  
-  document.getElementById("lessonResult").textContent="Good try! Try again.";  
- };  
-  
- document.getElementById("right").onclick=()=>{  
-  document.getElementById("lessonResult").textContent="Excellent! ⭐";  
-  if(!completed.includes(i)){  
-   completed.push(i);  
-   stars+=5;  
-   save();  
-   renderLessons();  
-  }  
- };  
- area.scrollIntoView({behavior:"smooth"});  
-}  
-  
-// LISTENING  
-  
-const listening=[  
- ["Good Morning!","A friendly morning greeting."],  
- ["How are you?","Ask someone how they feel."],  
- ["Thank you!","Show gratitude."],  
- ["My name is Alex.","Introduce yourself."],  
- ["I love learning English.","Talk about learning."]  
-];  
-  
-let listenIndex=0;  
-  
-function listenNow(){  
- speak(listening[listenIndex][0],.65);  
-}  
-  
-function nextListen(){  
- listenIndex=(listenIndex+1)%listening.length;  
- document.getElementById("listenWord").textContent=listening[listenIndex][0];  
- document.getElementById("listenMeaning").textContent=listening[listenIndex][1];  
-}  
-  
-// SPEAKING  
-  
-const buddyQuestions=[  
- "Hello! What is your name?",  
- "Nice to meet you! How are you?",  
- "What is your favourite colour?",  
- "What do you like to learn?",  
- "Wonderful! Keep practising!"  
-];  
-  
-let buddyIndex=0;  
-  
-function startMic(){  
- const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;  
-  
- if(!Recognition){  
-  document.getElementById("speechFeedback").textContent=  
-  "Microphone recognition is unavailable. Please type your answer.";  
-  return;  
- }  
-  
- let recognition=new Recognition();  
- recognition.lang="en-US";  
-  
- recognition.onresult=e=>{  
-  document.getElementById("speechAnswer").value=  
-  e.results[0][0].transcript;  
- };  
-  
- recognition.onerror=()=>{  
-  document.getElementById("speechFeedback").textContent=  
-  "Please check microphone permission or type your answer.";  
- };  
-  
- recognition.start();  
-}  
-  
-function sendAnswer(){  
- let answer=document.getElementById("speechAnswer").value.trim();  
-  
- if(!answer){  
-  document.getElementById("speechFeedback").textContent=  
-  "Please enter an answer first.";  
-  return;  
- }  
-  
- stars++;  
- save();  
-  
- document.getElementById("speechFeedback").textContent=  
- "Great job! Thank you for practising English! ⭐";  
-  
- buddyIndex=(buddyIndex+1)%buddyQuestions.length;  
-  
- document.getElementById("buddyQuestion").textContent=  
- buddyQuestions[buddyIndex];  
-  
- document.getElementById("speechAnswer").value="";  
-  
- speak(buddyQuestions[buddyIndex]);  
-}  
-  
-// QUIZ  
-  
-const questions=[  
- {q:"Which word is a greeting?",a:["Hello","Table","Blue"],c:0},  
- {q:"Choose the correct sentence.",a:["I are happy","I am happy","I happy"],c:1},  
- {q:"What is the opposite of BIG?",a:["Small","Tall","Fast"],c:0},  
- {q:"Which is an action word?",a:["Apple","Run","Yellow"],c:1},  
- {q:"Which word is polite?",a:["Please","Now!","Give!"],c:0}  
-];  
-  
-let quizIndex=0;  
-let answered=false;  
-  
-function displayQuiz(){  
- answered=false;  
- let q=questions[quizIndex];  
-  
- document.getElementById("quizNumber").textContent=  
- "Question "+(quizIndex+1)+" of "+questions.length;  
-  
- document.getElementById("question").textContent=q.q;  
- document.getElementById("quizFeedback").textContent="";  
- document.getElementById("nextButton").disabled=true;  
-  
- let area=document.getElementById("options");  
- area.innerHTML="";  
-  
- q.a.forEach((a,i)=>{  
-  let b=document.createElement("button");  
-  b.className="choice";  
-  b.textContent=a;  
-  b.onclick=()=>checkAnswer(i,b);  
-  area.appendChild(b);  
- });  
-}  
-  
-function checkAnswer(i,button){  
- if(answered)return;  
- answered=true;  
-  
- let correct=questions[quizIndex].c;  
- let buttons=document.querySelectorAll("#options button");  
-  
- if(i===correct){  
-  document.getElementById("quizFeedback").textContent=  
-  "🎉 Correct! You earned 3 stars!";  
-  stars+=3;  
-  button.style.background="#c9f6df";  
- }else{  
-  document.getElementById("quizFeedback").textContent=  
-  "Good try! The correct answer is "+questions[quizIndex].a[correct];  
-  button.style.background="#ffdce2";  
- }  
-  
- buttons[correct].style.borderColor="#3caf84";  
- quizPlayed=true;  
- save();  
- document.getElementById("nextButton").disabled=false;  
-}  
-  
-function nextQuestion(){  
- quizIndex=(quizIndex+1)%questions.length;  
- displayQuiz();  
-}  
-  
-// STORIES  
-  
-function storyQuestion(){  
- document.getElementById("storyFeedback").textContent=  
- "Answer: The bird felt happy because it helped the plant grow!";  
- stars++;  
- save();  
-}  
-  
-// WORD BANK  
-  
-const words=[  
- ["Apple","A fruit.","I eat an apple."],  
- ["Book","Something we read.","This is my book."],  
- ["Brave","Ready to face a challenge.","Be brave."],  
- ["Calm","Peaceful and relaxed.","Stay calm."],  
- ["Friend","Someone you care about.","My friend is kind."],  
- ["Happy","Feeling joyful.","I am happy."],  
- ["Kind","Caring and helpful.","Be kind to others."],  
- ["Learn","Gain knowledge.","I learn English."],  
- ["Polite","Showing good manners.","Please is polite."],  
- ["Tiny","Very small.","A tiny bird."]  
-];  
-  
-function renderWords(){  
- let search=document.getElementById("wordSearch").value.toLowerCase();  
- let list=document.getElementById("wordList");  
- list.innerHTML="";  
-  
- words.filter(w=>w[0].toLowerCase().includes(search)).forEach(w=>{  
-  let card=document.createElement("div");  
-  card.className="card";  
-  
-  let title=document.createElement("div");  
-  title.className="word";  
-  title.textContent=w[0];  
-  
-  let meaning=document.createElement("p");  
-  meaning.textContent=w[1];  
-  
-  let example=document.createElement("p");  
-  example.textContent="Example: "+w[2];  
-  
-  let button=document.createElement("button");  
-  button.className="action";  
-  button.textContent="🔊 Hear Word";  
-  button.onclick=()=>speak(w[0]+". "+w[1]+". "+w[2]);  
-  
-  card.append(title,meaning,example,button);  
-  list.appendChild(card);  
- });  
-}  
-  
-// REWARDS  
-  
-function renderBadges(){  
- let list=document.getElementById("badgeList");  
- if(!list)return;  
-  
- let all=[  
-  ["🌱","First Step",completed.length>=1],  
-  ["📚","Book Explorer",completed.length>=5],  
-  ["🏆","English Champion",completed.length>=10],  
-  ["💡","Quiz Star",quizPlayed]  
- ];  
-  
- list.innerHTML="";  
-  
- all.forEach(b=>{  
-  let div=document.createElement("div");  
-  div.className="badge";  
-  div.innerHTML="<h2>"+(b[2]?b[0]:"🔒")+"</h2><b>"+b[1]+"</b>";  
-  list.appendChild(div);  
- });  
-}  
-  
-// START WEBSITE  
-  
-update();  
-renderLessons();  
-renderWords();  
-displayQuiz();  
-  
-</script>  </body>  
-</html>  
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#21183f">
+<title>Alpha Buddy</title>
+<style>
+:root{--bg:#f5f2ff;--card:#fff;--ink:#282044;--muted:#77718e;--purple:#7055d9;--line:#e7e0ff}
+body.dark{--bg:#17152a;--card:#25213d;--ink:#f5f0ff;--muted:#bdb5d6;--line:#403958}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px Arial,sans-serif}
+header{background:linear-gradient(120deg,#20183e,#7055d9);color:white;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+header .brand{display:flex;align-items:center;gap:12px}
+.logo{font-size:45px}
+h1{margin:0;font-size:24px}
+nav{display:flex;overflow:auto;gap:6px;padding:10px;background:var(--card);position:sticky;top:0;z-index:3}
+button{cursor:pointer;border:0;border-radius:11px;padding:11px 14px;font-weight:bold;background:var(--purple);color:white}
+nav button{white-space:nowrap;background:#eee9ff;color:#5038b2}
+body.dark nav button{background:#40365d;color:#eee8ff}
+button:disabled{opacity:.45}
+main{max-width:950px;margin:auto;padding:16px}
+.page{display:none}
+.page.active{display:block}
+.hero,.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0}
+.hero{background:linear-gradient(120deg,#382578,#8669e8);color:white}
+.hero p{color:#eee8ff}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.progress{height:12px;background:var(--line);border-radius:20px;overflow:hidden}
+.progress span{display:block;height:100%;background:#36c69a;width:0}
+.lesson{display:flex;align-items:center;gap:12px}
+.lesson span{flex:1}
+.option{display:block;width:100%;text-align:left;margin:8px 0;background:var(--bg);color:var(--ink);border:2px solid var(--line)}
+.option.good{border-color:#22a879;background:#e5fff4;color:#126448}
+.option.bad{border-color:#d65c70;background:#fff0f2;color:#922c40}
+.word{font-size:28px;color:var(--purple);font-weight:bold}
+.feedback{font-weight:bold;min-height:22px}
+.field{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
+.badge{background:var(--bg);border:1px solid var(--line);padding:15px;border-radius:14px;text-align:center}
+.locked{opacity:.4}
+footer{text-align:center;padding:20px;color:var(--muted)}
+@media(max-width:550px){h1{font-size:20px}}
+</style>
+</head>
+<body>
+
+<header>
+<div class="brand">
+<span class="logo">🐻</span>
+<div>
+<h1>ALPHA BUDDY</h1>
+<div>Your English Adventure Starts Here</div>
+</div>
+</div>
+<div>⭐ <b id="xp">0</b> XP &nbsp; 🔥 <b id="streak">1</b> day</div>
+<button onclick="document.body.classList.toggle('dark')">🌙 Theme</button>
+</header>
+
+<nav>
+<button onclick="page('home')">🏠 Home</button>
+<button onclick="page('path')">🗺️ Journey</button>
+<button onclick="page('practice')">🎯 Practice</button>
+<button onclick="page('buddy')">🦉 Voice Buddy</button>
+<button onclick="page('stories')">📖 Stories</button>
+<button onclick="page('words')">🧠 Word Bank</button>
+<button onclick="page('rewards')">🏆 Rewards</button>
+</nav>
+
+<main>
+<section class="page active" id="home">
+<div class="hero">
+<div style="font-size:65px">🐻</div>
+<small>WELCOME, LEARNER</small>
+<h2>Small steps. Big confidence.</h2>
+<p>Learn English through a longer adventure with grammar, vocabulary, reading, writing and speaking practice.</p>
+<button onclick="page('path')">Continue learning →</button>
+</div>
+<div class="grid">
+<div class="card">
+<h3>Your progress</h3>
+<div class="progress"><span id="bar"></span></div>
+<p id="progressText">0 of 20 lessons completed</p>
+</div>
+<div class="card">
+<h3>Daily mission</h3>
+<p>Complete a practice round and earn XP.</p>
+<button onclick="page('practice')">Start mission</button>
+</div>
+</div>
+</section>
+
+<section class="page" id="path">
+<h2>🗺️ Your 20-lesson English journey</h2>
+<p class="muted">Five worlds, from first steps to confident communication.</p>
+<div id="lessons"></div>
+</section>
+
+<section class="page" id="lesson">
+<button onclick="page('path')">← Back</button>
+<div class="card">
+<small id="world"></small>
+<h2 id="ltitle"></h2>
+<p id="ldesc"></p>
+<div class="card">
+<h3>Learn</h3>
+<p id="teach"></p>
+<button onclick="say(document.getElementById('teach').textContent)">🔊 Listen</button>
+</div>
+<h3 id="lquestion"></h3>
+<div id="loptions"></div>
+<p class="feedback" id="lfeedback"></p>
+<button id="lcomplete" disabled onclick="completeLesson()">Complete lesson · +20 XP</button>
+</div>
+</section>
+
+<section class="page" id="practice">
+<h2>🎯 Practice arena</h2>
+<div class="card">
+<small id="qcount"></small>
+<h3 id="question"></h3>
+<div id="options"></div>
+<p class="feedback" id="feedback"></p>
+<button id="next" disabled onclick="nextQ()">Next →</button>
+</div>
+</section>
+
+<section class="page" id="buddy">
+<div class="card" style="text-align:center">
+<div style="font-size:65px">🦉</div>
+<h2>Buddy Voice Coach</h2>
+<p id="prompt">Hello! My name is Sam. What is your name?</p>
+<button onclick="say(document.getElementById('prompt').textContent)">🔊 Hear Buddy</button>
+<p class="muted">Say the sentence aloud or type your answer below.</p>
+<input class="field" id="answer" placeholder="Type your answer">
+<p>
+<button onclick="mic()">🎙️ Microphone</button>
+<button onclick="reply()">Send answer</button>
+</p>
+<p id="buddyFeedback" class="feedback"></p>
+<button onclick="nextPrompt()">Next conversation →</button>
+<p class="muted">Voice uses your browser's built-in speech tools. Microphone recognition depends on browser support and permission. This is a voice practice coach, not a live cloud AI assistant.</p>
+</div>
+</section>
+
+<section class="page" id="stories">
+<h2>📖 Reading corner</h2>
+<div class="card">
+<h3>The Seed of Patience 🌱</h3>
+<p id="story">Mira found a tiny seed near her garden gate. She planted it in soft soil and watered it every morning. For many days, nothing seemed to happen. Mira did not give up. One sunny morning, a small green shoot appeared. Weeks later, a bright flower opened. Mira learned that good things need time, care and patience.</p>
+<button onclick="say(document.getElementById('story').textContent)">🔊 Listen to story</button>
+<h3>What did Mira learn?</h3>
+<button class="option" onclick="storyAnswer(false,this)">Seeds grow without water.</button>
+<button class="option" onclick="storyAnswer(true,this)">Good things need time and care.</button>
+<button class="option" onclick="storyAnswer(false,this)">Flowers grow in one day.</button>
+<p id="storyFeedback" class="feedback"></p>
+</div>
+</section>
+
+<section class="page" id="words">
+<h2>🧠 Word bank</h2>
+<input class="field" id="search" placeholder="Search vocabulary..." oninput="renderWords()">
+<div id="wordList"></div>
+</section>
+
+<section class="page" id="rewards">
+<h2>🏆 Rewards room</h2>
+<div class="card">
+Total XP: <span class="word" id="rxp">0</span><br>
+Lessons completed: <span class="word" id="rdone">0</span>
+</div>
+<div class="grid" id="badges"></div>
+</section>
+</main>
+
+<footer>💜 Alpha Buddy · Learn English. Speak confidently. Shine brightly.</footer>
+
+<script>
+const data=[
+["WORLD 1 · FIRST STEPS","Hello & introductions","Greetings help us begin friendly conversations.","A greeting is a friendly way to begin. Example: Hello! My name is Alex.","Which sentence introduces your name?",["My name is Alex.","Where is the bus?","It is raining."],0],
+["WORLD 1 · FIRST STEPS","Everyday politeness","Use kind words in daily conversations.","Please makes a request polite. Thank you shows gratitude.","Which phrase shows gratitude?",["Because","Thank you","Yesterday"],1],
+["WORLD 1 · FIRST STEPS","People and places","Learn common naming words.","A noun names a person, place, animal or thing.","Which one is a place?",["Kind","School","Quickly"],1],
+["WORLD 1 · FIRST STEPS","Simple sentences","Build clear sentences.","A sentence begins with a capital letter and shares a complete idea.","Choose the complete sentence.",["Books reading I","I like reading books.","Like books"],1],
+["WORLD 2 · WORD BUILDER","Action words","Describe what people do.","A verb tells an action: run, write, think, smile.","Which word is an action?",["Beautiful","Run","Garden"],1],
+["WORLD 2 · WORD BUILDER","Describing words","Make sentences more interesting.","Adjectives describe nouns: a bright star, a quiet room.","Which word describes something?",["Soft","Flower","Grow"],0],
+["WORLD 2 · WORD BUILDER","Present tense","Talk about routines and facts.","Use present simple for habits: I walk. She walks.","Choose the correct sentence.",["She walk to school.","She walks to school.","She walking school."],1],
+["WORLD 2 · WORD BUILDER","Question words","Ask clear questions.","Who asks about a person. Where asks about a place.","Which word asks about a place?",["Who","Where","Why"],1],
+["WORLD 3 · SENTENCE STUDIO","Past tense","Talk about things that happened.","Many regular past verbs end in -ed: play becomes played.","Which sentence is in the past?",["I play now.","I played yesterday.","I will play tomorrow."],1],
+["WORLD 3 · SENTENCE STUDIO","Future plans","Talk about future plans.","Use will or going to for future actions.","Which sentence is about the future?",["I read yesterday.","I am reading now.","I will read tomorrow."],2],
+["WORLD 3 · SENTENCE STUDIO","Joining ideas","Connect ideas smoothly.","And adds information. But shows contrast. Because gives a reason.","Which word gives a reason?",["Because","And","Or"],0],
+["WORLD 3 · SENTENCE STUDIO","Prepositions","Explain where things are.","In, on and under describe position.","The book is ___ the table.",["under","on","between"],1],
+["WORLD 4 · CONFIDENT SPEAKER","Daily conversations","Keep a friendly conversation going.","Listen carefully, answer, then ask a related question.","A friendly reply to 'How are you?'",["I am fine, thank you.","Blue is a colour.","At five o'clock."],0],
+["WORLD 4 · CONFIDENT SPEAKER","Giving opinions","Share thoughts respectfully.","Try: I think... In my opinion... I agree because...","Which phrase introduces an opinion?",["I think...","Once upon a time...","Turn left..."],0],
+["WORLD 4 · CONFIDENT SPEAKER","Clear pronunciation","Speak clearly and steadily.","Use a comfortable pace and pause between ideas.","What helps listeners understand you?",["Speaking very fast","Speaking clearly","Skipping words"],1],
+["WORLD 4 · CONFIDENT SPEAKER","Reading for meaning","Find the main idea.","The main idea is what a text is mostly about.","What is a main idea?",["The central point","A random detail","The longest word"],0],
+["WORLD 5 · SKILL MASTER","Writing a paragraph","Organise ideas in a paragraph.","Use a topic sentence, supporting details and a closing sentence.","What does a topic sentence introduce?",["The main idea","A spelling list","An unrelated story"],0],
+["WORLD 5 · SKILL MASTER","Formal English","Write polite messages.","Formal messages use respectful greetings and complete sentences.","Which opening is formal?",["Hey!!!","Dear Teacher,","Yo"],1],
+["WORLD 5 · SKILL MASTER","Fix the mistake","Correct common grammar errors.","Check subject–verb agreement: He goes, not He go.","Choose the correct sentence.",["He go home.","He goes home.","He going home."],1],
+["WORLD 5 · SKILL MASTER","Your English showcase","Bring your skills together.","Keep practising vocabulary, grammar, reading, writing and speaking.","How can you keep improving?",["Never practise","Practise regularly","Avoid new words"],1]
+];
+
+const vocab=[
+["Confident","Feeling sure about yourself.","I feel confident when I practise."],
+["Curious","Wanting to learn more.","The curious student asked a question."],
+["Patient","Able to wait calmly.","Be patient while learning."],
+["Improve","To make something better.","I want to improve my writing."],
+["Grateful","Feeling thankful.","I am grateful for your help."],
+["Observe","To watch carefully.","Observe how the plant grows."],
+["Brilliant","Very clever or excellent.","That is a brilliant idea."],
+["Journey","A process from one stage to another.","Learning is a journey."],
+["Respect","To treat someone with care.","We respect different opinions."],
+["Discover","To find something new.","I discovered a new word."]
+];
+
+const quiz=[
+["Choose the correct spelling.",["Beautifull","Beautiful","Beutiful"],1],
+["Opposite of ancient?",["Modern","Old","Historic"],0],
+["Choose the correct sentence.",["They is ready.","They are ready.","They am ready."],1],
+["Which word is an adverb?",["Quickly","Quick","Speed"],0],
+["I have lived here ___ 2020.",["for","since","at"],1]
+];
+
+let xp=+(localStorage.abProXP||0);
+let done=JSON.parse(localStorage.abProDone||"[]");
+let li=0,correct=false,qi=0,answered=false;
+
+function page(id){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+if(id==="path")renderPath();
+if(id==="practice")renderQuiz();
+if(id==="words")renderWords();
+if(id==="rewards")renderRewards();
+scrollTo(0,0);
+}
+
+function say(t){
+if(!("speechSynthesis" in window)){
+alert("Speech is not supported in this browser.");
+return;
+}
+speechSynthesis.cancel();
+let u=new SpeechSynthesisUtterance(t);
+u.lang="en-US";
+u.rate=.82;
+speechSynthesis.speak(u);
+}
+
+function save(){
+localStorage.abProXP=xp;
+localStorage.abProDone=JSON.stringify(done);
+document.getElementById("xp").textContent=xp;
+document.getElementById("rxp").textContent=xp;
+document.getElementById("rdone").textContent=done.length;
+document.getElementById("bar").style.width=(done.length/20*100)+"%";
+document.getElementById("progressText").textContent=done.length+" of 20 lessons completed";
+renderRewards();
+}
+
+function renderPath(){
+let h=document.getElementById("lessons");
+h.innerHTML="";
+data.forEach((d,i)=>{
+let c=document.createElement("div");
+c.className="card lesson";
+let s=document.createElement("span");
+s.innerHTML="<b>"+(done.includes(i)?"✅ ":"📘 ")+(i+1)+". "+d[1]+"</b><br><small class='muted'>"+d[0]+" · "+d[2]+"</small>";
+let b=document.createElement("button");
+b.textContent=done.includes(i)?"Review":"Start";
+b.onclick=()=>openLesson(i);
+c.append(s,b);
+h.append(c);
+});
+}
+
+function openLesson(i){
+li=i;
+correct=false;
+let d=data[i];
+document.getElementById("world").textContent=d[0];
+document.getElementById("ltitle").textContent=d[1];
+document.getElementById("ldesc").textContent=d[2];
+document.getElementById("teach").textContent=d[3];
+document.getElementById("lquestion").textContent=d[4];
+document.getElementById("lfeedback").textContent="";
+document.getElementById("lcomplete").disabled=true;
+let h=document.getElementById("loptions");
+h.innerHTML="";
+d[5].forEach((a,j)=>{
+let b=document.createElement("button");
+b.className="option";
+b.textContent=a;
+b.onclick=()=>{
+if(correct)return;
+if(j===d[6]){
+correct=true;
+b.classList.add("good");
+document.getElementById("lfeedback").textContent="Excellent! You got it! 🌟";
+document.getElementById("lcomplete").disabled=false;
+}else{
+b.classList.add("bad");
+document.getElementById("lfeedback").textContent="Good try. Read the note and try again.";
+}
+};
+h.append(b);
+});
+page("lesson");
+}
+
+function completeLesson(){
+if(!done.includes(li)){
+done.push(li);
+xp+=20;
+save();
+}
+page("path");
+}
+
+function renderQuiz(){
+qi=0;
+quizShow();
+}
+
+function quizShow(){
+answered=false;
+let q=quiz[qi];
+document.getElementById("qcount").textContent="QUESTION "+(qi+1)+" OF 5";
+document.getElementById("question").textContent=q[0];
+document.getElementById("feedback").textContent="";
+document.getElementById("next").disabled=true;
+let h=document.getElementById("options");
+h.innerHTML="";
+q[1].forEach((a,j)=>{
+let b=document.createElement("button");
+b.className="option";
+b.textContent=a;
+b.onclick=()=>{
+if(answered)return;
+answered=true;
+if(j===q[2]){
+b.classList.add("good");
+document.getElementById("feedback").textContent="Correct! +5 XP 🎉";
+xp+=5;
+save();
+}else{
+b.classList.add("bad");
+document.getElementById("feedback").textContent="Good try! Correct answer: "+q[1][q[2]];
+}
+document.getElementById("next").disabled=false;
+};
+h.append(b);
+});
+}
+
+function nextQ(){
+if(qi===4){
+document.getElementById("feedback").textContent="Round complete! Great effort.";
+document.getElementById("next").textContent="Play again";
+document.getElementById("next").onclick=renderQuiz;
+}else{
+qi++;
+quizShow();
+}
+}
+
+let prompts=[
+"Hello! My name is Sam. What is your name?",
+"What do you enjoy doing after school?",
+"Tell me one thing you learned today.",
+"What is a story you like?",
+"What is one goal for this week?"
+];
+let promptIndex=0;
+
+function nextPrompt(){
+promptIndex=(promptIndex+1)%prompts.length;
+document.getElementById("prompt").textContent=prompts[promptIndex];
+document.getElementById("buddyFeedback").textContent="";
+}
+
+function mic(){
+let R=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!R){
+document.getElementById("buddyFeedback").textContent="Speech recognition is unavailable in this browser. Type your answer instead.";
+return;
+}
+let r=new R();
+r.lang="en-US";
+r.onresult=e=>document.getElementById("answer").value=e.results[0][0].transcript;
+r.onerror=()=>document.getElementById("buddyFeedback").textContent="Check microphone permission, or type your answer.";
+try{
+r.start();
+}catch(e){
+document.getElementById("buddyFeedback").textContent="Microphone is busy. Try again.";
+}
+}
+
+function reply(){
+let a=document.getElementById("answer").value.trim();
+if(!a){
+document.getElementById("buddyFeedback").textContent="Type or speak an answer first.";
+return;
+}
+xp+=5;
+save();
+document.getElementById("buddyFeedback").textContent="Nice effort! You practised expressing an idea in English. +5 XP";
+document.getElementById("answer").value="";
+}
+
+function storyAnswer(ok,b){
+if(ok){
+b.classList.add("good");
+document.getElementById("storyFeedback").textContent="Correct! Good things need time and care. +5 XP";
+xp+=5;
+save();
+}else{
+b.classList.add("bad");
+document.getElementById("storyFeedback").textContent="Try again. What happened while Mira cared for the seed?";
+}
+}
+
+function renderWords(){
+let s=(document.getElementById("search").value||"").toLowerCase();
+let h=document.getElementById("wordList");
+h.innerHTML="";
+vocab.filter(w=>w[0].toLowerCase().includes(s)).forEach(w=>{
+let c=document.createElement("div");
+c.className="card";
+c.innerHTML="<div class='word'>"+w[0]+"</div><p>"+w[1]+"</p><p class='muted'>Example: "+w[2]+"</p>";
+let b=document.createElement("button");
+b.textContent="🔊 Hear word";
+b.onclick=()=>say(w[0]+". "+w[1]+". "+w[2]);
+c.append(b);
+h.append(c);
+});
+}
+
+function renderRewards(){
+let list=[
+["🌱","First Step",done.length>=1],
+["📚","Book Explorer",done.length>=5],
+["🧭","World Traveller",done.length>=10],
+["🏅","Skill Builder",done.length>=15],
+["👑","Alpha Champion",done.length>=20],
+["⭐","100 XP Club",xp>=100]
+];
+document.getElementById("badges").innerHTML=list.map(b=>
+"<div class='badge "+(b[2]?"":"locked")+"'><div style='font-size:30px'>"+(b[2]?b[0]:"🔒")+"</div><b>"+b[1]+"</b><p class='muted'>"+(b[2]?"Unlocked":"Keep learning")+"</p></div>"
+).join("");
+}
+
+save();
+renderPath();
+renderWords();
+</script>
+</body>
+</html>
