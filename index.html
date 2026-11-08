@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Alpha Buddy</title>  <style>  
+*{box-sizing:border-box}  
+body{  
+ margin:0;  
+ font-family:Arial,sans-serif;  
+ background:#f4f1ff;  
+ color:#30245f;  
+}  
+header{  
+ background:linear-gradient(120deg,#503bb5,#a18bff);  
+ color:white;  
+ text-align:center;  
+ padding:22px;  
+}  
+header h1{font-size:32px;margin:5px}  
+nav{  
+ display:flex;  
+ flex-wrap:wrap;  
+ justify-content:center;  
+ gap:7px;  
+ padding:12px;  
+ background:white;  
+ position:sticky;  
+ top:0;  
+ z-index:5;  
+}  
+nav button{  
+ border:0;  
+ border-radius:12px;  
+ padding:11px;  
+ background:#eeeaff;  
+ color:#503bb5;  
+ font-weight:bold;  
+ cursor:pointer;  
+}  
+nav button:hover{background:#503bb5;color:white}  
+main{max-width:950px;margin:auto;padding:16px}  
+.page{display:none}  
+.page.active{display:block}  
+.card{  
+ background:white;  
+ padding:20px;  
+ border-radius:18px;  
+ margin:14px 0;  
+ box-shadow:0 4px 15px #0000000b;  
+}  
+.hero{text-align:center;padding:35px 15px}  
+.mascot{font-size:85px}  
+h2{color:#634bd0}  
+.action{  
+ border:0;  
+ border-radius:12px;  
+ padding:13px 18px;  
+ background:#7059dc;  
+ color:white;  
+ font-weight:bold;  
+ margin:5px;  
+ cursor:pointer;  
+}  
+.action:hover{background:#4934ad}  
+.choice{  
+ display:block;  
+ width:100%;  
+ text-align:left;  
+ padding:14px;  
+ border:2px solid transparent;  
+ background:#eeeaff;  
+ border-radius:12px;  
+ margin:8px 0;  
+ cursor:pointer;  
+ font-size:16px;  
+}  
+.choice:hover{border-color:#7059dc}  
+input{  
+ width:100%;  
+ padding:13px;  
+ border:2px solid #ddd5ff;  
+ border-radius:12px;  
+ font-size:16px;  
+}  
+.word{font-size:30px;font-weight:bold;color:#7059dc}  
+.progress{  
+ background:#e6e0ff;  
+ height:13px;  
+ border-radius:20px;  
+ overflow:hidden;  
+}  
+.progress div{  
+ height:100%;  
+ width:0;  
+ background:#54c9a5;  
+ transition:.3s;  
+}  
+.feedback{font-weight:bold;margin-top:12px}  
+.badges{display:flex;flex-wrap:wrap;gap:12px}  
+.badge{  
+ background:#fff1bd;  
+ border-radius:14px;  
+ padding:15px;  
+ text-align:center;  
+}  
+footer{  
+ background:#30245f;  
+ color:white;  
+ text-align:center;  
+ padding:20px;  
+ margin-top:25px;  
+}  
+</style>  </head>  <body>  <header>  
+ <h1>📘 ALPHA BUDDY</h1>  
+ <p>Your Friendly English Learning Partner</p>  
+ <h3>⭐ <span id="stars">0</span> Stars</h3>  
+</header>  <nav>  
+ <button onclick="showPage('home')">🏠 Home</button>  
+ <button onclick="showPage('journey')">🗺️ Journey</button>  
+ <button onclick="showPage('listen')">🎧 Listen</button>  
+ <button onclick="showPage('speak')">🎤 Speak</button>  
+ <button onclick="showPage('quiz')">❓ Quiz</button>  
+ <button onclick="showPage('stories')">📖 Stories</button>  
+ <button onclick="showPage('words')">🧠 Word Bank</button>  
+ <button onclick="showPage('rewards')">🏆 Rewards</button>  
+</nav>  <main>  <!-- HOME -->  <section id="home" class="page active">  
+ <div class="card hero">  
+  <<img src="logo.png" style="width:170px; border-radius:20px;">  
+  <h2>Hello, Learner!</h2>  
+  <p>Welcome to Alpha Buddy!</p>  
+  <p>Learn English slowly, easily and happily with Buddy.</p>  
+  <button class="action" onclick="showPage('journey')">Start Learning 🚀</button>  
+  <button class="action" onclick="speak('Welcome to Alpha Buddy! Let us learn English together.')">🔊 Meet Buddy</button>  
+ </div>   <div class="card">  
+  <h2>Your Progress</h2>  
+  <div class="progress"><div id="homeProgress"></div></div>  
+  <p id="progressText">0 of 10 lessons completed</p>  
+ </div>   <div class="card">  
+  <h2>💡 Today's Tip</h2>  
+  <p>Practise English every day. Mistakes help you learn!</p>  
+ </div>  
+</section>  <!-- JOURNEY -->  <section id="journey" class="page">  
+ <h2>🗺️ Your Slow Learning Journey</h2>  
+ <p>Complete each stage at your own speed.</p>  
+ <div class="card">  
+  <div class="progress"><div id="journeyProgress"></div></div>  
+  <p id="journeyText"></p>  
+ </div>  
+ <div id="lessonList"></div>  
+ <div id="lessonArea"></div>  
+</section>  <!-- LISTEN -->  <section id="listen" class="page">  
+ <h2>🎧 Listen & Learn</h2>  
+ <div class="card">  
+  <div class="word" id="listenWord">Good Morning!</div>  
+  <p id="listenMeaning">A friendly morning greeting.</p>  
+  <button class="action" onclick="listenNow()">🔊 Listen Slowly</button>  
+  <button class="action" onclick="nextListen()">Next ➡️</button>  
+ </div>  
+</section>  <!-- SPEAK -->  <section id="speak" class="page">  
+ <h2>🎤 Speak With Buddy</h2>  
+ <div class="card">  
+  <div class="mascot">🦉</div>  
+  <h3 id="buddyQuestion">Hello! What is your name?</h3>  
+  <button class="action" onclick="speak(buddyQuestions[buddyIndex])">🔊 Hear Buddy</button>  
+  <input id="speechAnswer" placeholder="Type your answer...">  
+  <button class="action" onclick="startMic()">🎙️ Speak</button>  
+  <button class="action" onclick="sendAnswer()">Send Answer</button>  
+  <p id="speechFeedback" class="feedback"></p>  
+ </div>  
+ <div class="card">  
+  <p>Microphone recognition depends on browser support and permission. You can always type your answer instead.</p>  
+ </div>  
+</section>  <!-- QUIZ -->  <section id="quiz" class="page">  
+ <h2>❓ Fun Quiz Time</h2>  
+ <div class="card">  
+  <p id="quizNumber"></p>  
+  <h3 id="question"></h3>  
+  <div id="options"></div>  
+  <p id="quizFeedback" class="feedback"></p>  
+  <button class="action" id="nextButton" onclick="nextQuestion()" disabled>Next Question ➡️</button>  
+ </div>  
+</section>  <!-- STORIES -->  <section id="stories" class="page">  
+ <h2>📖 Story Time</h2>  
+ <div class="card">  
+  <h3>The Helpful Little Bird 🐦</h3>  
+  <p id="storyText">  
+   A little bird saw a thirsty plant.  
+   Every day, it brought drops of water.  
+   Soon, the plant grew beautiful flowers.  
+   The bird felt happy because it helped someone.  
+  </p>  
+  <button class="action" onclick="speak(document.getElementById('storyText').innerText)">🔊 Listen to Story</button>  
+  <button class="action" onclick="storyQuestion()">Story Question</button>  
+  <p id="storyFeedback"></p>  
+ </div>  
+</section>  <!-- WORD BANK -->  <section id="words" class="page">  
+ <h2>🧠 Word Bank</h2>  
+ <input id="wordSearch" placeholder="Search for a word..." oninput="renderWords()">  
+ <div id="wordList"></div>  
+</section>  <!-- REWARDS -->  <section id="rewards" class="page">  
+ <h2>🏆 Rewards & Badges</h2>  
+ <div class="card">  
+  <h2>⭐ Your Stars: <span id="rewardStars">0</span></h2>  
+ </div>  
+ <div class="card">  
+  <h2>Your Badges</h2>  
+  <div class="badges" id="badgeList"></div>  
+ </div>  
+</section>  </main>  <footer>  
+ <h3>💜 ALPHA BUDDY</h3>  
+ <p>Learn English. Speak Confidently. Shine Brightly.</p>  
+</footer>  <script>  
+  
+// PROGRESS STORAGE  
+  
+let stars = Number(localStorage.getItem("abStars") || 0);  
+let completed = JSON.parse(localStorage.getItem("abLessons") || "[]");  
+let quizPlayed = localStorage.getItem("abQuiz") === "yes";  
+  
+function save(){  
+ localStorage.setItem("abStars",stars);  
+ localStorage.setItem("abLessons",JSON.stringify(completed));  
+ localStorage.setItem("abQuiz",quizPlayed?"yes":"no");  
+ update();  
+}  
+  
+function update(){  
+ document.getElementById("stars").textContent=stars;  
+ document.getElementById("rewardStars").textContent=stars;  
+  
+ let p=completed.length*10;  
+ document.getElementById("homeProgress").style.width=p+"%";  
+ document.getElementById("journeyProgress").style.width=p+"%";  
+ document.getElementById("progressText").textContent=  
+ completed.length+" of 10 lessons completed";  
+ document.getElementById("journeyText").textContent=p+"% completed";  
+  
+ renderBadges();  
+}  
+  
+// NAVIGATION  
+  
+function showPage(id){  
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));  
+ document.getElementById(id).classList.add("active");  
+  
+ if(id==="journey")renderLessons();  
+ if(id==="quiz")displayQuiz();  
+ if(id==="words")renderWords();  
+ if(id==="rewards")renderBadges();  
+  
+ window.scrollTo(0,0);  
+}  
+  
+// VOICE GUIDE  
+  
+function speak(text,rate=.75){  
+ if(!("speechSynthesis" in window)){  
+  alert("Voice is not supported in this browser.");  
+  return;  
+ }  
+ speechSynthesis.cancel();  
+ let voice=new SpeechSynthesisUtterance(text);  
+ voice.lang="en-US";  
+ voice.rate=rate;  
+ speechSynthesis.speak(voice);  
+}  
+  
+// LESSON DATA  
+  
+const lessons=[  
+ ["Hello English!","Learn greetings and introductions."],  
+ ["The Alphabet","Learn English letters."],  
+ ["First Words","Learn everyday words."],  
+ ["Naming Words","Understand nouns."],  
+ ["Making Sentences","Build simple sentences."],  
+ ["My Family","Learn family vocabulary."],  
+ ["Action Words","Learn verbs."],  
+ ["Asking Questions","Learn simple questions."],  
+ ["Conversations","Practise daily conversations."],  
+ ["First Story","Read and understand a story."]  
+];  
+  
+function renderLessons(){  
+ let list=document.getElementById("lessonList");  
+ list.innerHTML="";  
+  
+ lessons.forEach((l,i)=>{  
+  let card=document.createElement("div");  
+  card.className="card";  
+  
+  let title=document.createElement("h3");  
+  title.textContent=(completed.includes(i)?"✅ ":"📘 ")+  
+  "Stage "+(i+1)+": "+l[0];  
+  
+  let description=document.createElement("p");  
+  description.textContent=l[1];  
+  
+  let button=document.createElement("button");  
+  button.className="action";  
+  button.textContent="Open Lesson";  
+  button.onclick=()=>openLesson(i);  
+  
+  card.append(title,description,button);  
+  list.appendChild(card);  
+ });  
+}  
+  
+function openLesson(i){  
+ let area=document.getElementById("lessonArea");  
+  
+ area.innerHTML=`  
+ <div class="card">  
+ <h2>${lessons[i][0]}</h2>  
+ <p>${lessons[i][1]}</p>  
+ <p><b>Example:</b> Hello! My name is Alex.</p>  
+ <button class="action" id="lessonListen">🔊 Listen</button>  
+ <h3>Quick Practice</h3>  
+ <p>Which is a friendly greeting?</p>  
+ <button class="choice" id="wrong">Goodbye forever</button>  
+ <button class="choice" id="right">Hello!</button>  
+ <p id="lessonResult" class="feedback"></p>  
+ </div>`;  
+  
+ document.getElementById("lessonListen").onclick=()=>{  
+  speak("Hello! My name is Alex.");  
+ };  
+  
+ document.getElementById("wrong").onclick=()=>{  
+  document.getElementById("lessonResult").textContent="Good try! Try again.";  
+ };  
+  
+ document.getElementById("right").onclick=()=>{  
+  document.getElementById("lessonResult").textContent="Excellent! ⭐";  
+  if(!completed.includes(i)){  
+   completed.push(i);  
+   stars+=5;  
+   save();  
+   renderLessons();  
+  }  
+ };  
+ area.scrollIntoView({behavior:"smooth"});  
+}  
+  
+// LISTENING  
+  
+const listening=[  
+ ["Good Morning!","A friendly morning greeting."],  
+ ["How are you?","Ask someone how they feel."],  
+ ["Thank you!","Show gratitude."],  
+ ["My name is Alex.","Introduce yourself."],  
+ ["I love learning English.","Talk about learning."]  
+];  
+  
+let listenIndex=0;  
+  
+function listenNow(){  
+ speak(listening[listenIndex][0],.65);  
+}  
+  
+function nextListen(){  
+ listenIndex=(listenIndex+1)%listening.length;  
+ document.getElementById("listenWord").textContent=listening[listenIndex][0];  
+ document.getElementById("listenMeaning").textContent=listening[listenIndex][1];  
+}  
+  
+// SPEAKING  
+  
+const buddyQuestions=[  
+ "Hello! What is your name?",  
+ "Nice to meet you! How are you?",  
+ "What is your favourite colour?",  
+ "What do you like to learn?",  
+ "Wonderful! Keep practising!"  
+];  
+  
+let buddyIndex=0;  
+  
+function startMic(){  
+ const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;  
+  
+ if(!Recognition){  
+  document.getElementById("speechFeedback").textContent=  
+  "Microphone recognition is unavailable. Please type your answer.";  
+  return;  
+ }  
+  
+ let recognition=new Recognition();  
+ recognition.lang="en-US";  
+  
+ recognition.onresult=e=>{  
+  document.getElementById("speechAnswer").value=  
+  e.results[0][0].transcript;  
+ };  
+  
+ recognition.onerror=()=>{  
+  document.getElementById("speechFeedback").textContent=  
+  "Please check microphone permission or type your answer.";  
+ };  
+  
+ recognition.start();  
+}  
+  
+function sendAnswer(){  
+ let answer=document.getElementById("speechAnswer").value.trim();  
+  
+ if(!answer){  
+  document.getElementById("speechFeedback").textContent=  
+  "Please enter an answer first.";  
+  return;  
+ }  
+  
+ stars++;  
+ save();  
+  
+ document.getElementById("speechFeedback").textContent=  
+ "Great job! Thank you for practising English! ⭐";  
+  
+ buddyIndex=(buddyIndex+1)%buddyQuestions.length;  
+  
+ document.getElementById("buddyQuestion").textContent=  
+ buddyQuestions[buddyIndex];  
+  
+ document.getElementById("speechAnswer").value="";  
+  
+ speak(buddyQuestions[buddyIndex]);  
+}  
+  
+// QUIZ  
+  
+const questions=[  
+ {q:"Which word is a greeting?",a:["Hello","Table","Blue"],c:0},  
+ {q:"Choose the correct sentence.",a:["I are happy","I am happy","I happy"],c:1},  
+ {q:"What is the opposite of BIG?",a:["Small","Tall","Fast"],c:0},  
+ {q:"Which is an action word?",a:["Apple","Run","Yellow"],c:1},  
+ {q:"Which word is polite?",a:["Please","Now!","Give!"],c:0}  
+];  
+  
+let quizIndex=0;  
+let answered=false;  
+  
+function displayQuiz(){  
+ answered=false;  
+ let q=questions[quizIndex];  
+  
+ document.getElementById("quizNumber").textContent=  
+ "Question "+(quizIndex+1)+" of "+questions.length;  
+  
+ document.getElementById("question").textContent=q.q;  
+ document.getElementById("quizFeedback").textContent="";  
+ document.getElementById("nextButton").disabled=true;  
+  
+ let area=document.getElementById("options");  
+ area.innerHTML="";  
+  
+ q.a.forEach((a,i)=>{  
+  let b=document.createElement("button");  
+  b.className="choice";  
+  b.textContent=a;  
+  b.onclick=()=>checkAnswer(i,b);  
+  area.appendChild(b);  
+ });  
+}  
+  
+function checkAnswer(i,button){  
+ if(answered)return;  
+ answered=true;  
+  
+ let correct=questions[quizIndex].c;  
+ let buttons=document.querySelectorAll("#options button");  
+  
+ if(i===correct){  
+  document.getElementById("quizFeedback").textContent=  
+  "🎉 Correct! You earned 3 stars!";  
+  stars+=3;  
+  button.style.background="#c9f6df";  
+ }else{  
+  document.getElementById("quizFeedback").textContent=  
+  "Good try! The correct answer is "+questions[quizIndex].a[correct];  
+  button.style.background="#ffdce2";  
+ }  
+  
+ buttons[correct].style.borderColor="#3caf84";  
+ quizPlayed=true;  
+ save();  
+ document.getElementById("nextButton").disabled=false;  
+}  
+  
+function nextQuestion(){  
+ quizIndex=(quizIndex+1)%questions.length;  
+ displayQuiz();  
+}  
+  
+// STORIES  
+  
+function storyQuestion(){  
+ document.getElementById("storyFeedback").textContent=  
+ "Answer: The bird felt happy because it helped the plant grow!";  
+ stars++;  
+ save();  
+}  
+  
+// WORD BANK  
+  
+const words=[  
+ ["Apple","A fruit.","I eat an apple."],  
+ ["Book","Something we read.","This is my book."],  
+ ["Brave","Ready to face a challenge.","Be brave."],  
+ ["Calm","Peaceful and relaxed.","Stay calm."],  
+ ["Friend","Someone you care about.","My friend is kind."],  
+ ["Happy","Feeling joyful.","I am happy."],  
+ ["Kind","Caring and helpful.","Be kind to others."],  
+ ["Learn","Gain knowledge.","I learn English."],  
+ ["Polite","Showing good manners.","Please is polite."],  
+ ["Tiny","Very small.","A tiny bird."]  
+];  
+  
+function renderWords(){  
+ let search=document.getElementById("wordSearch").value.toLowerCase();  
+ let list=document.getElementById("wordList");  
+ list.innerHTML="";  
+  
+ words.filter(w=>w[0].toLowerCase().includes(search)).forEach(w=>{  
+  let card=document.createElement("div");  
+  card.className="card";  
+  
+  let title=document.createElement("div");  
+  title.className="word";  
+  title.textContent=w[0];  
+  
+  let meaning=document.createElement("p");  
+  meaning.textContent=w[1];  
+  
+  let example=document.createElement("p");  
+  example.textContent="Example: "+w[2];  
+  
+  let button=document.createElement("button");  
+  button.className="action";  
+  button.textContent="🔊 Hear Word";  
+  button.onclick=()=>speak(w[0]+". "+w[1]+". "+w[2]);  
+  
+  card.append(title,meaning,example,button);  
+  list.appendChild(card);  
+ });  
+}  
+  
+// REWARDS  
+  
+function renderBadges(){  
+ let list=document.getElementById("badgeList");  
+ if(!list)return;  
+  
+ let all=[  
+  ["🌱","First Step",completed.length>=1],  
+  ["📚","Book Explorer",completed.length>=5],  
+  ["🏆","English Champion",completed.length>=10],  
+  ["💡","Quiz Star",quizPlayed]  
+ ];  
+  
+ list.innerHTML="";  
+  
+ all.forEach(b=>{  
+  let div=document.createElement("div");  
+  div.className="badge";  
+  div.innerHTML="<h2>"+(b[2]?b[0]:"🔒")+"</h2><b>"+b[1]+"</b>";  
+  list.appendChild(div);  
+ });  
+}  
+  
+// START WEBSITE  
+  
+update();  
+renderLessons();  
+renderWords();  
+displayQuiz();  
+  
+</script>  </body>  
+</html>  
