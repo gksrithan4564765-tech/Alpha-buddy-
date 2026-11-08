@@ -170,6 +170,113 @@ if(wi>0)return (wi-1)+"-5";
 return "";
 }
 function openLesson(wi,li){
+<h3>📝 Check your understanding</h3>
+<p id="question"></p>
+<div id="answers"></div>
+<p id="feedback"></p>
+<button id="completeBtn" disabled onclick="completeLesson()">Complete lesson ✓</button>
+</section>
+
+<section id="practiceArea" class="card" style="display:none">
+<h2>🧠 Practice Room</h2>
+<p>Choose the correct sentence:</p>
+<button class="option" onclick="checkPractice(false)">She go to school.</button>
+<button class="option" onclick="checkPractice(true)">She goes to school.</button>
+<button class="option" onclick="checkPractice(false)">She going school.</button>
+<p id="practiceFeedback"></p>
+</section>
+</main>
+
+<footer>Alpha Buddy Pro • Learn a little. Improve a lot.</footer>
+
+<script>
+const worlds=[
+["World 1: First Steps",[
+["Greetings","Greetings are words we use when meeting people. We say Hello, Good morning, Good afternoon or Good evening. We can ask, 'How are you?' A polite reply is, 'I am fine, thank you.'","Which is a greeting?",["Good morning","Goodbye forever","Run fast"],0],
+["Introducing Yourself","You can introduce yourself by saying, 'My name is Sam.' You can also say, 'I am a student.' Ask another person, 'What is your name?' Speak slowly and clearly.","Which sentence introduces you?",["Where is my bag?","My name is Sam.","It is raining."],1],
+["Polite Words","Polite words make conversations friendly. Use please when asking, thank you when someone helps, and excuse me when you need someone's attention. Say sorry when you make a mistake.","Which word shows gratitude?",["Thank you","Please","Excuse me"],0],
+["Nouns","A noun is a word that names a person, place, animal or thing. Teacher, school, dog and pencil are nouns. Nouns are important because they tell us what we are talking about.","Which is a noun?",["Beautiful","School","Quickly"],1],
+["Pronouns","Pronouns replace nouns. I, you, he, she, it, we and they are pronouns. Instead of saying 'Riya is happy' again and again, we can say 'She is happy.'","Which is a pronoun?",["Table","They","Jump"],1],
+["Simple Sentences","A simple sentence gives a complete idea. It usually has a subject and a verb. For example: 'Birds fly.' 'I read books.' Start sentences with a capital letter and end them with punctuation.","Which is a complete sentence?",["The blue","Birds fly.","Running quickly"],1]
+]],
+["World 2: Word Builder",[
+["Action Verbs","Verbs describe actions or states. Read, write, walk, think and play are verbs. In 'I play football', the word play tells us the action.","Find the verb: 'I write a letter.'",["I","write","letter"],1],
+["Describing Words","Adjectives describe nouns. A tall building, a bright star and a kind person use adjectives. Adjectives help make your English more interesting.","Which word is an adjective?",["Beautiful","Dance","Under"],0],
+["Opposite Words","Opposites have different meanings. Hot and cold, big and small, happy and sad are examples. Learning opposites helps you describe things clearly.","What is the opposite of difficult?",["Hard","Easy","Long"],1],
+["Singular and Plural","Singular means one. Plural means more than one. Book becomes books. Cat becomes cats. Some words change differently, such as child becoming children.","What is the plural of book?",["Bookes","Books","Book"],1],
+["Question Words","Who asks about a person. What asks about a thing. Where asks about a place. When asks about time. Why asks for a reason. How asks about a method or condition.","Which word asks about a place?",["Where","Who","Why"],0],
+["Using Articles","A, an and the are articles. Use 'a' before many consonant sounds, 'an' before many vowel sounds, and 'the' for something specific. Example: an apple, a book, the sun.","Choose the correct phrase.",["a apple","an apple","the an apple"],1]
+]],
+["World 3: Sentence Studio",[
+["Present Tense","Present tense describes habits and things happening now. 'I play every day.' 'She reads books.' Remember that he, she and it usually take an s or es in simple present verbs.","Choose the correct sentence.",["He play cricket.","He plays cricket.","He playing cricket."],1],
+["Past Tense","Past tense describes completed actions. Many verbs add -ed: walk becomes walked. Some verbs change: go becomes went and eat becomes ate.","What is the past tense of go?",["Goed","Going","Went"],2],
+["Future Tense","Future tense can describe what will happen. Use will plus the base verb. For example: 'I will study tomorrow.' 'They will visit us.'","Complete: I ___ learn English.",["will","yesterday","am yesterday"],0],
+["Prepositions","Prepositions show relationships between words. Examples include in, on, under, beside, behind and between. The book is on the table. The cat is under the chair.","The pen is ___ the box.",["in","quickly","happy"],0],
+["Conjunctions","Conjunctions join words or sentences. And adds information. But shows contrast. Because gives a reason. Example: 'I studied because I had a test.'","Which word joins ideas?",["Because","Blue","Walk"],0],
+["Adverbs","Adverbs often describe how, when or where an action happens. Slowly, carefully, yesterday and outside are examples. In 'She speaks softly', softly describes how she speaks.","Find the adverb.",["Softly","She","Speaks"],0]
+]],
+["World 4: Confident Speaker",[
+["Daily Conversations","A conversation is a friendly exchange of ideas. Listen carefully, take turns and answer clearly. You can start with a greeting and ask simple questions about someone's day.","What is important in a conversation?",["Listening carefully","Shouting","Ignoring others"],0],
+["Asking for Help","You can ask politely: 'Could you please help me?' or 'Can you explain this?' Clear questions help others understand what you need.","Which is polite?",["Help now!","Could you please help me?","You must help."],1],
+["Giving Opinions","Use phrases such as 'I think', 'In my opinion' and 'I believe'. Give a reason for your opinion. Example: 'I think reading is useful because it teaches us new words.'","Which phrase gives an opinion?",["I think","Yesterday","Under the table"],0],
+["Pronunciation","Pronunciation means saying words clearly. Speak at a comfortable speed. Listen to a word, repeat it, and notice its sounds. You do not need to speak quickly to speak well.","What helps pronunciation?",["Careful listening and practice","Speaking as fast as possible","Never repeating"],0],
+["Reading Skills","Read a short passage carefully. Find the main idea, notice important details and look up unfamiliar words. Reading every day builds vocabulary and understanding.","What should you find in a passage?",["Only its longest word","Its main idea","Only punctuation"],1],
+["Storytelling","A story usually has a beginning, middle and ending. Describe who is in it, where it happens and what happens. Use connecting words such as first, next and finally.","Which word can introduce the ending?",["Finally","Yesterday","Under"],0]
+]],
+["World 5: English Master",[
+["Paragraph Writing","A paragraph develops one main idea. Start with a topic sentence. Add supporting details and examples. Finish with a sentence that completes the idea. Keep your writing organised.","What does a topic sentence introduce?",["The main idea","A random word","A question mark"],0],
+["Formal English","Formal English is useful in school letters, applications and professional communication. Use respectful language, complete sentences and clear information.","Where is formal English useful?",["An application letter","A casual game chat only","A secret code"],0],
+["Grammar Detective","Good writing uses correct grammar. Check subject and verb agreement, tense, punctuation and spelling. Read your sentence again to find mistakes.","What should you check?",["Grammar and punctuation","Only the font colour","Only the page size"],0],
+["Email Writing","A clear email has a subject, greeting, message and closing. Be polite and keep the message focused. Check names and spelling before sending.","What does an email need?",["A clear message","Only emojis","No subject ever"],0],
+["Creative Writing","Creative writing uses imagination to describe people, places and events. Add details that help readers understand your ideas. Organise your thoughts before writing.","What helps creative writing?",["Imagination and details","Copying random words","Avoiding ideas"],0],
+["Final English Challenge","You have reached the final lesson! Use what you learned: vocabulary, grammar, reading, speaking and writing. Progress comes from regular practice. Keep learning beyond this course.","What helps you improve your English?",["Regular practice","Never reading","Giving up after one mistake"],0]
+]]
+];
+
+let completed=JSON.parse(localStorage.getItem("alphaCompleted")||"[]");
+let xp=Number(localStorage.getItem("alphaXP")||0);
+let current=null;
+const total=worlds.reduce((n,w)=>n+w[1].length,0);
+
+function save(){
+localStorage.setItem("alphaCompleted",JSON.stringify(completed));
+localStorage.setItem("alphaXP",xp);
+document.getElementById("xp").textContent=xp;
+document.getElementById("bar").style.width=(completed.length/total*100)+"%";
+document.getElementById("progressText").textContent=completed.length+" of "+total+" lessons completed";
+}
+function home(){
+hideAll();
+document.getElementById("homeArea").style.display="block";
+}
+function hideAll(){
+["homeArea","journeyArea","lessonArea","practiceArea"].forEach(id=>document.getElementById(id).style.display="none");
+}
+function showJourney(){
+hideAll();
+document.getElementById("journeyArea").style.display="block";
+let html="";
+let number=0;
+worlds.forEach((world,wi)=>{
+html+=`<div class="card world"><h3>${world[0]}</h3>`;
+world[1].forEach((lesson,li)=>{
+let id=wi+"-"+li;
+let done=completed.includes(id);
+let unlocked=number===0||completed.includes(getPrevious(wi,li));
+html+=`<div class="lesson"><div><b>${done?"✅":unlocked?"📘":"🔒"} ${lesson[0]}</b><div class="small">Lesson ${number+1} • Take your time</div></div><button ${!unlocked?"disabled":""} onclick="openLesson(${wi},${li})">${done?"Review":unlocked?"Start":"Locked"}</button></div>`;
+number++;
+});
+html+="</div>";
+});
+document.getElementById("worlds").innerHTML=html;
+save();
+}
+function getPrevious(wi,li){
+if(li>0)return wi+"-"+(li-1);
+if(wi>0)return (wi-1)+"-5";
+return "";
+}
+function openLesson(wi,li){
 current={wi,li};
 let l=worlds[wi][1][li];
 hideAll();
